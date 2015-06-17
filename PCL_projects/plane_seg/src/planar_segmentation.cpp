@@ -19,20 +19,6 @@ bool VISUAL = false;
 int TYPE_VISUALIZATION = 0;
 bool OUTPUT = false;
 
-// Print the banner and usage information for this executable
-void usage(){	cout << "\nMulti-Plane Ransac Segmentation\n";
-//cout << "  authors Katie - Summer 2015\n";
-cout << "\nUsage: plane [OPTIONS] <input_cloud.pcd>\n";
-cout << "\nOptions:\n";
-cout << "\n  --help		Print usage options.\n";
-cout << "  --vv		Verbose mode, print out progress during computation.\n";
-cout << "  --visual		Visual mode, display a colored segmentation of the cloud.\n";
-cout << " --output <filename>		save the model parameters to this file\n";
-cout << "\nPurpose: Uses RANSAC algorithm to segment a PCL pointcloud (.pcd) file into multiple planes. "
-		"Outputs the segmented .pcd plane cloud files." << endl;
-
-}
-
 int
 main (int argc, char** argv)
 {
@@ -68,7 +54,7 @@ main (int argc, char** argv)
 			/** --help option */
 			if ( vm.count("help")  ){
 				cout << "\nMulti-Plane Ransac Segmentation" << endl
-						<< "\nUsage: plane_segmentation <input_cloud.pcd> [-hv] [-s (0|1)] [-o <output_file>] [-t NUM]" << endl
+						<< "\nUsage: plane_segmentation <input_cloud.pcd> [OPTIONS] [-o <output_file>] [-d <./relative/path/to/dir>]" << endl
 						<< "Purpose: Uses RANSAC algorithm to segment a PCL pointcloud (.pcd) file into "
 						"multiple planes. Outputs the segmented .pcd plane cloud files." << endl
 						<< desc << endl;
@@ -96,21 +82,24 @@ main (int argc, char** argv)
 		} if (vm.count("verbose")){ // Check verbose flag
 			VERBOSE= true;
 		}
-		if (vm.count("output")){ // Check output flag
-		  string p = output_directory + "/" + output_file_name;
+		if (vm.count("outdir")){ //create directory if necessary
 		  boost::filesystem::path dir(output_directory);
-
 		  if(!boost::filesystem::exists(dir)){
-		    if (boost::filesystem::create_directory(dir))
-		      std::cout << "Directory " << output_directory << " was created." << std::endl;
+		    if (boost::filesystem::create_directory(dir)){
+		      cout << "Directory " << output_directory << " was created." << std::endl;
+		    } else {
+		      std::cerr << "Directory invalid. Will proceed to save output to cwd." << std::endl;
+		      output_directory = "./"; //reset to cwd.
+		    }
 		  }
-
+		} if (vm.count("output")){ // Check output flag
+		  string p = output_directory + "/" + output_file_name;
 		  const char * path = p.c_str();
 		  output_file.open (path, ios::out | ios::trunc);
 		  if (!output_file.is_open()) {
 		    output_directory = "./";
 		    std::cerr << "Unable to open/create file. "
-		        "Will proceed to save cloud segments in cwd.\n";
+		        "Will skip output file, but proceed to save cloud segments in cwd.\n";
 		  } else {
 		    OUTPUT= true;
 		  }

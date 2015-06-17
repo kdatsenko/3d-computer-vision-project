@@ -70,15 +70,15 @@ main (int argc, char** argv)
 								("noplane", opt::bool_switch(&search_plane), "Exclude planes.")
 								("nocylinder", opt::bool_switch(&search_cyl), "Exclude cylinders.")
 								("nosphere", opt::bool_switch(&search_sphere), "Exclude spheres.")
-								("cyl_thresh,a", opt::value<float>(&cyl_thresh)->default_value(0.02), "Cylinder Distance threshold - units are relative to data pcd file, usually metres.")
+								("cyl_thresh,a", opt::value<float>(&cyl_thresh)->default_value(0.02, "0.02"), "Cylinder Distance threshold - units are relative to data pcd file, usually metres.")
 								("max_cyl_iterations,b", opt::value<int>(&max_cyl_iterations)->default_value(5000), "Maximum number of iterations to try to find a Cylinder model")
-								("max_cyl_radius,c", opt::value<float>(&max_cyl_radius)->default_value(0.1), "Cylinder")
-								("cyl_normal_weight,d", opt::value<float>(&cyl_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Cylinder normal.")
-								("plane_thresh,l", opt::value<float>(&plane_thresh)->default_value(0.03), "Plane Distance threshold - units are relative to data pcd file, usually metres")
-								("plane_normal_weight,m", opt::value<float>(&plane_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Plane normal.")
+								("max_cyl_radius,c", opt::value<float>(&max_cyl_radius)->default_value(0.1, "0.1"), "Cylinder")
+								("cyl_normal_weight,f", opt::value<float>(&cyl_normal_weight)->default_value(0.1, "0.1"), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Cylinder normal.")
+								("plane_thresh,l", opt::value<float>(&plane_thresh)->default_value(0.03, "0.03"), "Plane Distance threshold - units are relative to data pcd file, usually metres")
+								("plane_normal_weight,m", opt::value<float>(&plane_normal_weight)->default_value(0.1, "0.1"), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Plane normal.")
 								("max_plane_iterations,n", opt::value<int>(&max_plane_iterations)->default_value(500), "Maximum number of iterations to try to find a Planar model")
-								("sphere_thresh,x", opt::value<float>(&sphere_thresh)->default_value(0.01), "Sphere Distance threshold - units are relative to data pcd file, usually metres")
-								("sphere_normal_weight,y", opt::value<float>(&sphere_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Sphere normal.")
+								("sphere_thresh,x", opt::value<float>(&sphere_thresh)->default_value(0.01, "0.01"), "Sphere Distance threshold - units are relative to data pcd file, usually metres")
+								("sphere_normal_weight,y", opt::value<float>(&sphere_normal_weight)->default_value(0.1, "0.1"), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Sphere normal.")
 								("max_sphere_iterations,z", opt::value<int>(&max_sphere_iterations)->default_value(100), "Maximum number of iterations to try to find a Spherical model");
 		opt::variables_map vm;
 
@@ -97,8 +97,8 @@ main (int argc, char** argv)
 
 			/** --help option */
 			if ( vm.count("help")  ){
-				cout << "\n Sequential Multi-Object Ransac Segmentation" << endl
-						<< "\nUsage: cylinder_plane <input_cloud.pcd> [-hv] [-s (0|1)] [-o <output_file>] [-t NUM]" << endl
+				cout << "\nSequential Multi-Object Ransac Segmentation" << endl
+						<< "\nUsage: sequential_ransac <input_cloud.pcd> [OPTIONS]" << endl
 						<< "Purpose: Uses RANSAC algorithm to segment a PCL pointcloud (.pcd) file into "
 						"multiple objects. Segments shapes one-by-one in a sequence."
 						" Outputs the segmented .pcd plane cloud files." << endl
@@ -126,25 +126,29 @@ main (int argc, char** argv)
 			TYPE_VISUALIZATION = (visual_arg == 0) ? VISUALIZATION_SIMPLE : VISUALIZATION_SHAPE;
 		} if (vm.count("verbose")){ // Check verbose flag
 			VERBOSE= true;
-		} if (vm.count("output")){ // Check output flag
-			string p = output_directory + "/" + output_file_name;
-			const char * path = p.c_str();
-      boost::filesystem::path dir(output_directory);
-
-      if(!boost::filesystem::exists(dir)){
-        if (boost::filesystem::create_directory(dir))
-          std::cout << "Directory " << output_directory << " was created." << std::endl;
-      }
-
-			output_file.open (path, ios::out | ios::trunc);
-			if (!output_file.is_open()) {
-				output_directory = "./";
-				std::cerr << "Unable to open/create file. "
-						"Will proceed to save cloud segments in cwd.\n";
-			} else {
-				OUTPUT= true;
-			}
 		}
+    if (vm.count("outdir")){ //create directory if necessary
+      boost::filesystem::path dir(output_directory);
+      if(!boost::filesystem::exists(dir)){
+        if (boost::filesystem::create_directory(dir)){
+          cout << "Directory " << output_directory << " was created." << std::endl;
+        } else {
+          std::cerr << "Directory invalid. Will proceed to save output to cwd." << std::endl;
+          output_directory = "./"; //reset to cwd.
+        }
+      }
+    } if (vm.count("output")){ // Check output flag
+      string p = output_directory + "/" + output_file_name;
+      const char * path = p.c_str();
+      output_file.open (path, ios::out | ios::trunc);
+      if (!output_file.is_open()) {
+        output_directory = "./";
+        std::cerr << "Unable to open/create file. "
+            "Will skip output file, but proceed to save cloud segments in cwd.\n";
+      } else {
+        OUTPUT= true;
+      }
+    }
 	} catch(std::exception& e) {
 		std::cerr << "Unhandled Exception reached the top of main: "
 				<< e.what() << ", application will now exit" << std::endl;
