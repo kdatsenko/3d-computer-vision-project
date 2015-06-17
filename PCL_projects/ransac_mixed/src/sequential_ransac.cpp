@@ -46,7 +46,7 @@ int max_sphere_iterations;
 
 //Globals
 int MAX_OUTLIERS;
-const float PERCENT_OUTLIERS= .1; //MODIFY
+const float PERCENT_OUTLIERS= 0.1; //MODIFY
 
 int
 main (int argc, char** argv)
@@ -95,7 +95,6 @@ main (int argc, char** argv)
 				exit(0);
 			}
 
-			search_flip(); //initialize search flags
 			/** --help option */
 			if ( vm.count("help")  ){
 				cout << "\n Sequential Multi-Object Ransac Segmentation" << endl
@@ -152,7 +151,7 @@ main (int argc, char** argv)
 		return(2);
 
 	}
-
+	search_flip(); //initialize search flags
 	char * inputFile = argv[1];
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>),
 			cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
@@ -207,10 +206,11 @@ main (int argc, char** argv)
 	pcl::PCDWriter writer;
 	int j = -1;//shape number (initially incremented to 0 (PLANE) in the loop)
 	int i = 1, nr_points = (int) cloud_filtered->points.size ();
-	MAX_OUTLIERS= (int)(cloud->size() * PERCENT_OUTLIERS);
+	MAX_OUTLIERS= nr_points * PERCENT_OUTLIERS;
 	// While 30% of the original cloud is still there
 	while (cloud_filtered->points.size () > MAX_OUTLIERS & search_valid())
 	{
+
 	  j++; //change the shape
 		if (j==SHAPES) j = 0; //reinitialize to the first shape
 		//Skip the shapes that were eliminated due to ransac's segmentation failure
@@ -221,6 +221,7 @@ main (int argc, char** argv)
 		} else if (j==SPHERE){
 			if (!search_sphere) continue;
 		}
+
 		// Segment the largest component from the remaining cloud, with fixed sequence of shapes
 		pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
 		string shape_name;

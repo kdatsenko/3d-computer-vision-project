@@ -164,7 +164,6 @@ int main(int argc, char** argv) {
 				exit(0);
 			}
 
-			search_flip(); //initialize search flags
 			/** --help option */
 			if ( vm.count("help")  ){
 				cout << "\nGeneralized Minimal-Model Ransac Segmentation" << endl
@@ -225,7 +224,7 @@ int main(int argc, char** argv) {
 	// Initialize queue of nodes containing segment outliers to process.
 	// Useful for BFS of shortest branch of segments.
 	queue<treeNode*> toCompute;
-
+	search_flip(); //initialize search flags
 	// initialize PointClouds
 	pcl::PointCloud<PointT>::Ptr cloud_unfil (new pcl::PointCloud<PointT>);
 	pcl::PointCloud<PointT>::Ptr updated (new pcl::PointCloud<PointT>);
