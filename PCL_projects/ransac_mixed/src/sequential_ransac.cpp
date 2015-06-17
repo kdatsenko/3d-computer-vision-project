@@ -67,28 +67,28 @@ main (int argc, char** argv)
 								("visual,s", opt::value<int>(&visual_arg), "ARG (0=RGB colour | 1=Viewport shape) Visual mode, display a colored segmentation of the cloud.")
 								("output,o", opt::value<string>(&output_file_name), "<output_file> Save the model parameters to this file.")
 								("outdir,d", opt::value<string>(&output_directory)->default_value("./"), "<./directory> Save all output to this RELATIVE (to location of execution file) dir.")
-								("noplane,np", opt::bool_switch(&search_plane), "Exclude planes.")
-								("nocylinder,nc", opt::bool_switch(&search_cyl), "Exclude cylinders.")
-								("nosphere,ns", opt::bool_switch(&search_sphere), "Exclude spheres.")
-								("cyl_thresh,ct", opt::value<float>(&cyl_thresh)->default_value(0.02), "Cylinder Distance threshold - units are relative to data pcd file, usually metres.")
-								("max_cyl_iterations,ci", opt::value<int>(&max_cyl_iterations)->default_value(5000), "Maximum number of iterations to try to find a Cylinder model")
-								("max_cyl_radius,cr", opt::value<float>(&max_cyl_radius)->default_value(0.1), "Cylinder")
-								("cyl_normal_weight,cn", opt::value<float>(&cyl_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Cylinder normal.")
-								("plane_thresh,pt", opt::value<float>(&plane_thresh)->default_value(0.03), "Plane Distance threshold - units are relative to data pcd file, usually metres")
-								("plane_normal_weight,pn", opt::value<float>(&plane_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Plane normal.")
-								("max_plane_iterations,pi", opt::value<int>(&max_plane_iterations)->default_value(500), "Maximum number of iterations to try to find a Planar model")
-								("sphere_thresh,st", opt::value<float>(&sphere_thresh)->default_value(0.01), "Sphere Distance threshold - units are relative to data pcd file, usually metres")
-								("sphere_normal_weight,sn", opt::value<float>(&sphere_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Sphere normal.")
-								("max_sphere_iterations,si", opt::value<int>(&max_sphere_iterations)->default_value(100), "Maximum number of iterations to try to find a Spherical model");
+								("noplane", opt::bool_switch(&search_plane), "Exclude planes.")
+								("nocylinder", opt::bool_switch(&search_cyl), "Exclude cylinders.")
+								("nosphere", opt::bool_switch(&search_sphere), "Exclude spheres.")
+								("cyl_thresh,a", opt::value<float>(&cyl_thresh)->default_value(0.02), "Cylinder Distance threshold - units are relative to data pcd file, usually metres.")
+								("max_cyl_iterations,b", opt::value<int>(&max_cyl_iterations)->default_value(5000), "Maximum number of iterations to try to find a Cylinder model")
+								("max_cyl_radius,c", opt::value<float>(&max_cyl_radius)->default_value(0.1), "Cylinder")
+								("cyl_normal_weight,d", opt::value<float>(&cyl_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Cylinder normal.")
+								("plane_thresh,l", opt::value<float>(&plane_thresh)->default_value(0.03), "Plane Distance threshold - units are relative to data pcd file, usually metres")
+								("plane_normal_weight,m", opt::value<float>(&plane_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Plane normal.")
+								("max_plane_iterations,n", opt::value<int>(&max_plane_iterations)->default_value(500), "Maximum number of iterations to try to find a Planar model")
+								("sphere_thresh,x", opt::value<float>(&sphere_thresh)->default_value(0.01), "Sphere Distance threshold - units are relative to data pcd file, usually metres")
+								("sphere_normal_weight,y", opt::value<float>(&sphere_normal_weight)->default_value(0.1), "Set the relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) between point normals and the Sphere normal.")
+								("max_sphere_iterations,z", opt::value<int>(&max_sphere_iterations)->default_value(100), "Maximum number of iterations to try to find a Spherical model");
 		opt::variables_map vm;
 
 		try
 		{	// Parse arguments and, if necessary, print usage
+		  namespace cls = boost::program_options::command_line_style;
 			opt::store(opt::command_line_parser(argc, argv) // can throw
 						.options(desc)
 						.style(
-								opt::command_line_style::unix_style
-							  | opt::command_line_style::allow_long_disguise) //allow shorthand opt with > 1 char
+						    opt::command_line_style::unix_style) //allow shorthand opt with > 1 char
 								.run(), vm);
 			if (argc < 2){
 				std::cerr << desc << std::endl;

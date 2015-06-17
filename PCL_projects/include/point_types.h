@@ -102,5 +102,6 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> viewportsVis (
 // Visualize the point clouds in different colors
 void visualizeCloud(vector<pcl::PointCloud<PointT>::Ptr> clouds, std::vector<std::vector<float> > models);
 
+
 #endif	/* POINT_TYPES_H */
 

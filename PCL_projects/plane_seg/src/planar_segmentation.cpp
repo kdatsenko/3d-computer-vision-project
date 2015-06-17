@@ -22,7 +22,7 @@ bool OUTPUT = false;
 // Print the banner and usage information for this executable
 void usage(){	cout << "\nMulti-Plane Ransac Segmentation\n";
 //cout << "  authors Katie - Summer 2015\n";
-cout << "\nUsage: planar_segmentation [OPTIONS] <input_cloud.pcd>\n";
+cout << "\nUsage: plane [OPTIONS] <input_cloud.pcd>\n";
 cout << "\nOptions:\n";
 cout << "\n  --help		Print usage options.\n";
 cout << "  --vv		Verbose mode, print out progress during computation.\n";
