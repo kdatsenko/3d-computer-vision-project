@@ -114,6 +114,30 @@ region_growing_segmentation/fast:
 	$(MAKE) -f CMakeFiles/region_growing_segmentation.dir/build.make CMakeFiles/region_growing_segmentation.dir/build
 .PHONY : region_growing_segmentation/fast
 
+compute_hausdorff.o: compute_hausdorff.cpp.o
+.PHONY : compute_hausdorff.o
+
+# target to build an object file
+compute_hausdorff.cpp.o:
+	$(MAKE) -f CMakeFiles/region_growing_segmentation.dir/build.make CMakeFiles/region_growing_segmentation.dir/compute_hausdorff.cpp.o
+.PHONY : compute_hausdorff.cpp.o
+
+compute_hausdorff.i: compute_hausdorff.cpp.i
+.PHONY : compute_hausdorff.i
+
+# target to preprocess a source file
+compute_hausdorff.cpp.i:
+	$(MAKE) -f CMakeFiles/region_growing_segmentation.dir/build.make CMakeFiles/region_growing_segmentation.dir/compute_hausdorff.cpp.i
+.PHONY : compute_hausdorff.cpp.i
+
+compute_hausdorff.s: compute_hausdorff.cpp.s
+.PHONY : compute_hausdorff.s
+
+# target to generate assembly for a file
+compute_hausdorff.cpp.s:
+	$(MAKE) -f CMakeFiles/region_growing_segmentation.dir/build.make CMakeFiles/region_growing_segmentation.dir/compute_hausdorff.cpp.s
+.PHONY : compute_hausdorff.cpp.s
+
 home/osboxes/3d-computer-vision-project/PCL_projects/include/visualization.o: home/osboxes/3d-computer-vision-project/PCL_projects/include/visualization.cpp.o
 .PHONY : home/osboxes/3d-computer-vision-project/PCL_projects/include/visualization.o
 
@@ -171,6 +195,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... region_growing_segmentation"
+	@echo "... compute_hausdorff.o"
+	@echo "... compute_hausdorff.i"
+	@echo "... compute_hausdorff.s"
 	@echo "... home/osboxes/3d-computer-vision-project/PCL_projects/include/visualization.o"
 	@echo "... home/osboxes/3d-computer-vision-project/PCL_projects/include/visualization.i"
 	@echo "... home/osboxes/3d-computer-vision-project/PCL_projects/include/visualization.s"
